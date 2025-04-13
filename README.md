@@ -62,3 +62,15 @@ tmux attach -t collab
 ```
 
 Finished!
+
+
+## Why tailscale
+It creates a peer to peer connection between devices, so it behaves like all the connected devices are on same LAN network, without needing any port forwarding. Tailscale can be used for multiple purposes, like:
+1. Access Home Lab Servers Securely
+2. Play LAN Games Remotely
+3. Access Company Server/Database from Home
+4. Share Files Instantly
+5. Control Smart Home Devices which need LAN
+6. Remote Desktop
+7. Secure Cloud Server Access
+and many more...
