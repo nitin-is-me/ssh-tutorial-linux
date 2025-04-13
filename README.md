@@ -15,7 +15,7 @@ Same install steps, but logs into their own Tailscale account.
 
 ## Step 2: Share Access Securely
 ### Method A: Share a Single Device (Easiest)
-1. Go to Tailscale Admin Console.
+1. Go to Tailscale Admin Console (https://login.tailscale.com/admin/machines).
 2. Find your machine → Click "Share...".
 3. Enter your friend’s email → They’ll get an invite link.
 
