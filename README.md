@@ -4,59 +4,73 @@ This is an SSH tutorial I created for working on machines remotely (without port
 <hr>
 
 ## Step 1: Install Tailscale (Both of You)
-### 1. You (Host):<br>
+#### 1. You (Client):<br>
 ```
 curl -fsSL https://tailscale.com/install.sh | sh
 sudo tailscale up
 ```
-Log in with your account (e.g., Google).<br>
-### 2. Friend (Client):<br>
+Log in with your account (e.g., Google, Github).<br>
+#### 2. Friend (Host):<br>
 Same install steps, but logs into their own Tailscale account.
 
 ## Step 2: Share Access Securely
 ### Method A: Share a Single Device (Easiest)
+#### Friend (Host):
 1. Go to Tailscale Admin Console (https://login.tailscale.com/admin/machines).
 2. Find your machine → Click "Share...".
-3. Enter your friend’s email → They’ll get an invite link.
+3. Enter your host's (the one wanting access to your machine) email → They’ll get an invite link.
+4. After accepting the invitation, the host has access to machine (not yet).
 
 ### Method B: Share a Tag (Advanced)
-1. Edit your Tailscale ACLs (https://login.tailscale.com/admin/acls):
+#### Friend (Host):
+1. Go to Tailscale ACLs Config Page (https://login.tailscale.com/admin/acls).
+2. Edit your Tailscale ACLs (https://login.tailscale.com/admin/acls):
 ```
 {
   "tagOwners": {
-    "tag:collab": ["your@email.com"],
+    "tag:collab": ["emailofhost@email.com"]
   },
   "acls": [
-    {"action": "accept", "src": ["tag:collab"], "dst": ["*:*"]},
+    {
+      "action": "accept",
+      "src": ["tag:collab"],
+      "dst": ["*:*"]
+    }
   ]
 }
 ```
-2. Tag your device:
+3. Tag your device:
 ```
 sudo tailscale up --advertise-tags=tag:collab
 ```
+4. Now you’ll be able to access the device tagged tag:collab.
 
 ## Step 3: Verify Access
-Your friend runs:
+#### You (Client):
+1. You run:
 ```
 tailscale status
 ```
-Should see your device with `tags:tag:collab` (or shared explicitly).
+2. You should see your friend's device in the list:
+    - If using Method A → `shared by friend@example.com `
+    - If using Method B → `tags:tag:collab`   
 
 ## Step 4: Connect via SSH
-Friend connects using your Tailscale IP (only works after sharing):
+#### You (Client):
+1. From your machine, use the Tailscale IP shown in the status list or in Tailscale Admin Console.
+1. Connect using your friend's Tailscale IP and machine username (only works after sharing and they should have tailscale server running using `sudo tailscale up`):
 ```
-ssh your-username@100.x.y.z
+ssh friend-username@100.x.y.z
 ```
 
-## Step 5: Start TMux Session
-### You (Host):
+## Step 5: Start TMux Session (To share the same screen for collaboration):
+#### Friend (Host):
 ```
 tmux new -s collab
 nvim file.txt
 ```
 
-### Friend attaches:
+### You (Client):
 ```
 tmux attach -t collab
 ```
